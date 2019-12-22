@@ -63,9 +63,9 @@
                     },
                     success: function () {
                         this.success = true;
-                        this.name = '';
-                        this.email = '';
-                        this.password = '';
+                        this.name = "";
+                        this.email = "";
+                        this.password = "";
                     },
                     error: function (resp) {
                         this.error = true;

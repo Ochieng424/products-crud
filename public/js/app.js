@@ -3306,9 +3306,9 @@ __webpack_require__.r(__webpack_exports__);
         },
         success: function success() {
           this.success = true;
-          this.name = '';
-          this.email = '';
-          this.password = '';
+          this.name = "";
+          this.email = "";
+          this.password = "";
         },
         error: function error(resp) {
           this.error = true;
