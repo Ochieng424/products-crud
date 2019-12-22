@@ -9,9 +9,9 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
-<body>
-<div class="container">
-    <div id="app"></div>
+<body style="margin: 0; padding: 0">
+<div class="container-fluid" style="margin: 0; padding: 0">
+    <div id="app" style="margin: 0; padding: 0"></div>
 </div>
 <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
