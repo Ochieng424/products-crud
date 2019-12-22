@@ -12,6 +12,7 @@ import App from './App.vue';
 
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+
 Vue.use(VueAxios, axios);
 axios.defaults.baseURL = 'http://localhost:8000/api';
 
@@ -19,6 +20,7 @@ axios.defaults.baseURL = 'http://localhost:8000/api';
 import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
+
 //moment js
 import moment from 'moment';
 
@@ -45,19 +47,45 @@ const toast = swal.mixin({
 });
 window.toast = toast;
 window.Fire = new Vue();
+
 //pagination
 Vue.component('pagination', require('laravel-vue-pagination'));
 
 let routes = [
-    {path: '/', component: require('./components/Home.vue').default},
-    {path: '/register', component: require('./components/Register.vue').default},
-    {path: '/login', component: require('./components/Login.vue').default},
-    {path: '/dashboard', component: require('./components/Dashboard.vue').default},
+    {
+        path: '/', component: require('./components/Home.vue').default, meta: {
+            auth: false
+        }
+    },
+    {
+        path: '/register', component: require('./components/Register.vue').default, meta: {
+            auth: false
+        }
+    },
+    {
+        path: '/login', component: require('./components/Login.vue').default, meta: {
+            auth: false
+        }
+    },
+    {
+        path: '/dashboard', component: require('./components/Dashboard.vue').default, meta: {
+            auth: true
+        }
+    },
 ];
 const router = new VueRouter({
     // mode: 'history',
     routes // short for `routes: routes`
 })
+
+// websanova
+Vue.router = router;
+
+Vue.use(require('@websanova/vue-auth'), {
+    auth: require('@websanova/vue-auth/drivers/auth/bearer.js'),
+    http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
+    router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
+});
 
 /**
  * The following block of code may be used to automatically register your
