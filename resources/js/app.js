@@ -10,6 +10,11 @@ window.Vue = require('vue');
 
 import App from './App.vue';
 
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+Vue.use(VueAxios, axios);
+axios.defaults.baseURL = 'http://localhost:8000/api';
+
 // VueRouter
 import VueRouter from 'vue-router';
 
@@ -28,7 +33,7 @@ window.Form = Form;
 Vue.component(HasError.name, HasError);
 Vue.component(AlertError.name, AlertError);
 
-// sweatalert
+// sweetalert
 import swal from 'sweetalert2';
 
 window.swal = swal;
@@ -46,10 +51,11 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 let routes = [
     {path: '/', component: require('./components/Home.vue').default},
     {path: '/register', component: require('./components/Register.vue').default},
+    {path: '/login', component: require('./components/Login.vue').default},
     {path: '/dashboard', component: require('./components/Dashboard.vue').default},
 ];
 const router = new VueRouter({
-    mode: 'history',
+    // mode: 'history',
     routes // short for `routes: routes`
 })
 

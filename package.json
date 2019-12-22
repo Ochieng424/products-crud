@@ -29,6 +29,7 @@
         "moment": "^2.24.0"
     },
     "dependencies": {
-        "@websanova/vue-auth": "^2.21.15-beta"
+        "@websanova/vue-auth": "^2.21.15-beta",
+        "vue-axios": "^2.1.5"
     }
 }
