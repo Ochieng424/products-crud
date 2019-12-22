@@ -3276,16 +3276,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Register",
   data: function data() {
     return {
-      form: new Form({
-        name: '',
-        email: '',
-        password: ''
-      })
+      errors: {},
+      error: false,
+      success: false,
+      name: '',
+      email: '',
+      password: ''
     };
+  },
+  methods: {
+    register: function register() {
+      this.$auth.register({
+        data: {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        },
+        success: function success() {
+          this.success = true;
+          this.name = '';
+          this.email = '';
+          this.password = '';
+        },
+        error: function error(resp) {
+          this.error = true;
+          this.errors = resp.response.data.errors;
+        },
+        redirect: null
+      });
+    }
   }
 });
 
@@ -61352,11 +61383,44 @@ var render = function() {
         [
           _c("h4", [_vm._v("Register")]),
           _vm._v(" "),
-          _c("form", [
-            _c(
-              "div",
-              { staticClass: "form-group" },
-              [
+          _vm.error && !_vm.success
+            ? _c("div", { staticClass: "alert alert-danger" }, [
+                _c("p", [
+                  _vm._v("There was an error, unable to complete registration.")
+                ])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.success
+            ? _c("div", { staticClass: "alert alert-success" }, [
+                _c(
+                  "p",
+                  [
+                    _vm._v(
+                      "Registration completed. You can now\n                    "
+                    ),
+                    _c("router-link", { attrs: { to: { path: "/login" } } }, [
+                      _vm._v("Sign In.")
+                    ])
+                  ],
+                  1
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              attrs: { method: "post" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.register($event)
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "form-group" }, [
                 _c("label", [_vm._v("Name")]),
                 _vm._v(" "),
                 _c("input", {
@@ -61364,37 +61428,35 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.form.name,
-                      expression: "form.name"
+                      value: _vm.name,
+                      expression: "name"
                     }
                   ],
                   staticClass: "form-control",
-                  class: { "is-invalid": _vm.form.errors.has("name") },
                   attrs: {
                     type: "text",
                     name: "name",
                     placeholder: "Full Name"
                   },
-                  domProps: { value: _vm.form.name },
+                  domProps: { value: _vm.name },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.$set(_vm.form, "name", $event.target.value)
+                      _vm.name = $event.target.value
                     }
                   }
                 }),
                 _vm._v(" "),
-                _c("has-error", { attrs: { form: _vm.form, field: "name" } })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "form-group" },
-              [
+                _vm.error && _vm.errors.name
+                  ? _c("small", { staticStyle: { color: "red" } }, [
+                      _vm._v(_vm._s(_vm.errors.name))
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
                 _c("label", [_vm._v("Email")]),
                 _vm._v(" "),
                 _c("input", {
@@ -61402,33 +61464,31 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.form.email,
-                      expression: "form.email"
+                      value: _vm.email,
+                      expression: "email"
                     }
                   ],
                   staticClass: "form-control",
-                  class: { "is-invalid": _vm.form.errors.has("email") },
                   attrs: { type: "email", name: "email", placeholder: "Email" },
-                  domProps: { value: _vm.form.email },
+                  domProps: { value: _vm.email },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.$set(_vm.form, "email", $event.target.value)
+                      _vm.email = $event.target.value
                     }
                   }
                 }),
                 _vm._v(" "),
-                _c("has-error", { attrs: { form: _vm.form, field: "email" } })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "form-group" },
-              [
+                _vm.error && _vm.errors.email
+                  ? _c("small", { staticStyle: { color: "red" } }, [
+                      _vm._v(_vm._s(_vm.errors.email))
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group" }, [
                 _c("label", [_vm._v("Password")]),
                 _vm._v(" "),
                 _c("input", {
@@ -61436,45 +61496,45 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.form.password,
-                      expression: "form.password"
+                      value: _vm.password,
+                      expression: "password"
                     }
                   ],
                   staticClass: "form-control",
-                  class: { "is-invalid": _vm.form.errors.has("password") },
                   attrs: {
                     type: "password",
                     name: "password",
                     placeholder: "Password"
                   },
-                  domProps: { value: _vm.form.password },
+                  domProps: { value: _vm.password },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.$set(_vm.form, "password", $event.target.value)
+                      _vm.password = $event.target.value
                     }
                   }
                 }),
                 _vm._v(" "),
-                _c("has-error", {
-                  attrs: { form: _vm.form, field: "password" }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary",
-                staticStyle: { width: "100%" },
-                attrs: { type: "submit" }
-              },
-              [_vm._v("Register")]
-            )
-          ])
+                _vm.error && _vm.errors.password
+                  ? _c("small", { staticStyle: { color: "red" } }, [
+                      _vm._v(_vm._s(_vm.errors.password))
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  staticStyle: { width: "100%" },
+                  attrs: { type: "submit" }
+                },
+                [_vm._v("Register")]
+              )
+            ]
+          )
         ]
       )
     ])

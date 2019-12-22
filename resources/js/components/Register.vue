@@ -3,27 +3,35 @@
         <div class="row">
             <div class="col-sm-6 ml-auto mr-auto mt-4" style="background-color: #f4f4f4; padding: 20px">
                 <h4>Register</h4>
-                <form>
+                <div class="alert alert-danger" v-if="error && !success">
+                    <p>There was an error, unable to complete registration.</p>
+                </div>
+                <div class="alert alert-success" v-if="success">
+                    <p>Registration completed. You can now
+                        <router-link :to="{path:'/login'}">Sign In.</router-link>
+                    </p>
+                </div>
+                <form @submit.prevent="register" method="post">
                     <div class="form-group">
                         <label>Name</label>
-                        <input v-model="form.name" type="text" name="name"
+                        <input v-model="name" type="text" name="name"
                                placeholder="Full Name"
-                               class="form-control" :class="{ 'is-invalid': form.errors.has('name') }">
-                        <has-error :form="form" field="name"></has-error>
+                               class="form-control">
+                        <small style="color: red" v-if="error && errors.name">{{ errors.name }}</small>
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input v-model="form.email" type="email" name="email"
+                        <input v-model="email" type="email" name="email"
                                placeholder="Email"
-                               class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
-                        <has-error :form="form" field="email"></has-error>
+                               class="form-control">
+                        <small style="color: red" v-if="error && errors.email">{{ errors.email }}</small>
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input v-model="form.password" type="password" name="password"
+                        <input v-model="password" type="password" name="password"
                                placeholder="Password"
-                               class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
-                        <has-error :form="form" field="password"></has-error>
+                               class="form-control">
+                        <small style="color: red" v-if="error && errors.password">{{ errors.password }}</small>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%">Register</button>
                 </form>
@@ -37,11 +45,34 @@
         name: "Register",
         data() {
             return {
-                form: new Form({
-                    name: '',
-                    email: '',
-                    password: ''
-                })
+                errors: {},
+                error: false,
+                success: false,
+                name: '',
+                email: '',
+                password: ''
+            }
+        },
+        methods: {
+            register() {
+                this.$auth.register({
+                    data: {
+                        name: this.name,
+                        email: this.email,
+                        password: this.password
+                    },
+                    success: function () {
+                        this.success = true;
+                        this.name = '';
+                        this.email = '';
+                        this.password = '';
+                    },
+                    error: function (resp) {
+                        this.error = true;
+                        this.errors = resp.response.data.errors;
+                    },
+                    redirect: null
+                });
             }
         }
     }
