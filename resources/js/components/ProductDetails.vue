@@ -2,11 +2,12 @@
     <div class="container-fluid">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><router-link :to="{path: '/dashboard'}">Dashboard</router-link></li>
+                <li class="breadcrumb-item"><router-link :to="{path: '/dashboard'}">All Products</router-link></li>
                 <li class="breadcrumb-item active" aria-current="page">{{details.productNumber}}</li>
             </ol>
         </nav>
-        <h1>Product Details</h1>
+        <h2>Product Details</h2>
+        <hr>
         <div class="row">
             <div class="col-sm-5">
                 <img :src="details.image" class="card-img img-fluid mx-auto" alt="...">

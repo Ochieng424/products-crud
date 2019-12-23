@@ -3057,6 +3057,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App"
 });
@@ -3176,6 +3178,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Dashboard",
@@ -3190,6 +3199,7 @@ __webpack_require__.r(__webpack_exports__);
       errors: {},
       error: false,
       allProducts: {},
+      search: '',
       form: new Form({
         id: '',
         name: '',
@@ -3201,8 +3211,16 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    deleteProduct: function deleteProduct(productId) {
+    searchit: function searchit() {
       var _this = this;
+
+      var query = this.search;
+      axios.get('/product/find_products/' + query).then(function (data) {
+        _this.allProducts = data.data;
+      });
+    },
+    deleteProduct: function deleteProduct(productId) {
+      var _this2 = this;
 
       swal.fire({
         title: 'Are you sure?',
@@ -3219,7 +3237,7 @@ __webpack_require__.r(__webpack_exports__);
             swal.fire('Deleted!', 'Successfully Deleted!!', 'success');
             Fire.$emit('entry');
           })["catch"](function (error) {
-            _this.errors = error.response.data.errors;
+            _this2.errors = error.response.data.errors;
             swal.fire({
               type: 'error',
               title: 'Error!!',
@@ -3230,7 +3248,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updateProduct: function updateProduct() {
-      var _this2 = this;
+      var _this3 = this;
 
       for (var i = 0; i < this.attachments.length; i++) {
         this.formProduct.append('files[]', this.attachments[i]);
@@ -3246,11 +3264,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post('/product/update_product/' + this.form.id, this.formProduct, config).then(function (response) {
-        _this2.$modal.hide('add-product');
+        _this3.$modal.hide('add-product');
 
         Fire.$emit('entry');
 
-        _this2.form.reset();
+        _this3.form.reset();
 
         swal.fire({
           type: 'success',
@@ -3258,8 +3276,8 @@ __webpack_require__.r(__webpack_exports__);
           text: 'Product Updated Successfully'
         });
       })["catch"](function (error) {
-        _this2.error = true;
-        _this2.errors = error.response.data.errors;
+        _this3.error = true;
+        _this3.errors = error.response.data.errors;
       });
     },
     editProduct: function editProduct(product) {
@@ -3268,11 +3286,11 @@ __webpack_require__.r(__webpack_exports__);
       this.form.fill(product);
     },
     getProducts: function getProducts() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get("/product/get_products").then(function (_ref) {
         var data = _ref.data;
-        return [_this3.allProducts = data];
+        return [_this4.allProducts = data];
       });
     },
     fieldChange: function fieldChange(e) {
@@ -3297,7 +3315,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$modal.show('add-product');
     },
     createProduct: function createProduct() {
-      var _this4 = this;
+      var _this5 = this;
 
       for (var i = 0; i < this.attachments.length; i++) {
         this.formProduct.append('files[]', this.attachments[i]);
@@ -3313,11 +3331,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post('/product/create_product', this.formProduct, config).then(function (response) {
-        _this4.$modal.hide('add-product');
+        _this5.$modal.hide('add-product');
 
         Fire.$emit('entry');
 
-        _this4.form.reset();
+        _this5.form.reset();
 
         swal.fire({
           type: 'success',
@@ -3325,17 +3343,17 @@ __webpack_require__.r(__webpack_exports__);
           text: 'Product Created Successfully'
         });
       })["catch"](function (error) {
-        _this4.error = true;
-        _this4.errors = error.response.data.errors;
+        _this5.error = true;
+        _this5.errors = error.response.data.errors;
       });
     }
   },
   created: function created() {
-    var _this5 = this;
+    var _this6 = this;
 
     this.getProducts();
     Fire.$on('entry', function () {
-      _this5.getProducts();
+      _this6.getProducts();
     });
   }
 });
@@ -3531,6 +3549,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -74897,106 +74916,111 @@ var render = function() {
               attrs: { id: "navbarNav" }
             },
             [
-              _c("ul", { staticClass: "navbar-nav ml-auto" }, [
-                _c(
-                  "li",
-                  { staticClass: "nav-item" },
-                  [
-                    _c(
-                      "router-link",
-                      { staticClass: "nav-link", attrs: { to: { path: "/" } } },
-                      [_vm._v("Home")]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                !_vm.$auth.check()
-                  ? _c(
-                      "li",
-                      { staticClass: "nav-item" },
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            staticClass: "nav-link",
-                            attrs: { to: { path: "/login" } }
-                          },
-                          [_vm._v("Login")]
-                        )
-                      ],
-                      1
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                !_vm.$auth.check()
-                  ? _c(
-                      "li",
-                      { staticClass: "nav-item" },
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            staticClass: "nav-link",
-                            attrs: { to: { path: "/register" } }
-                          },
-                          [_vm._v("Register")]
-                        )
-                      ],
-                      1
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.$auth.check()
-                  ? _c("li", { staticClass: "nav-item" }, [
-                      _c("div", { staticClass: "dropdown nav-link" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-secondary dropdown-toggle",
-                            attrs: {
-                              type: "button",
-                              id: "dropdownMenuButton",
-                              "data-toggle": "dropdown",
-                              "aria-haspopup": "true",
-                              "aria-expanded": "false"
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                " +
-                                _vm._s(_vm.$auth.user().name) +
-                                "\n                            "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "dropdown-menu",
-                            attrs: { "aria-labelledby": "dropdownMenuButton" }
-                          },
-                          [
-                            _c(
-                              "a",
-                              {
-                                staticClass: "dropdown-item",
-                                attrs: { href: "#" },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.$auth.logout()
+              _c("div", { staticClass: "row" }, [
+                _c("ul", { staticClass: "navbar-nav ml-auto" }, [
+                  _c(
+                    "li",
+                    { staticClass: "nav-item" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          staticClass: "nav-link",
+                          attrs: { to: { path: "/" } }
+                        },
+                        [_vm._v("Home")]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  !_vm.$auth.check()
+                    ? _c(
+                        "li",
+                        { staticClass: "nav-item" },
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "nav-link",
+                              attrs: { to: { path: "/login" } }
+                            },
+                            [_vm._v("Login")]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  !_vm.$auth.check()
+                    ? _c(
+                        "li",
+                        { staticClass: "nav-item" },
+                        [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "nav-link",
+                              attrs: { to: { path: "/register" } }
+                            },
+                            [_vm._v("Register")]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.$auth.check()
+                    ? _c("li", { staticClass: "nav-item" }, [
+                        _c("div", { staticClass: "dropdown nav-link" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-secondary dropdown-toggle",
+                              attrs: {
+                                type: "button",
+                                id: "dropdownMenuButton",
+                                "data-toggle": "dropdown",
+                                "aria-haspopup": "true",
+                                "aria-expanded": "false"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                   " +
+                                  _vm._s(_vm.$auth.user().name) +
+                                  "\n                               "
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "dropdown-menu",
+                              attrs: { "aria-labelledby": "dropdownMenuButton" }
+                            },
+                            [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "dropdown-item",
+                                  attrs: { href: "#" },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.$auth.logout()
+                                    }
                                   }
-                                }
-                              },
-                              [_vm._v("Logout")]
-                            )
-                          ]
-                        )
+                                },
+                                [_vm._v("Logout")]
+                              )
+                            ]
+                          )
+                        ])
                       ])
-                    ])
-                  : _vm._e()
+                    : _vm._e()
+                ])
               ])
             ]
           )
@@ -75072,6 +75096,59 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "form",
+              {
+                staticClass: "form-inline my-2 my-lg-0 ml-auto",
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.searchit($event)
+                  }
+                }
+              },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search,
+                      expression: "search"
+                    }
+                  ],
+                  staticClass: "form-control mr-sm-2",
+                  attrs: {
+                    type: "search",
+                    placeholder: "Search",
+                    "aria-label": "Search"
+                  },
+                  domProps: { value: _vm.search },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.search = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-outline-success my-2 my-sm-0",
+                    attrs: { type: "submit" }
+                  },
+                  [_vm._v("Search")]
+                )
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
           _c(
             "div",
             { staticClass: "row" },
@@ -75845,7 +75922,7 @@ var render = function() {
           { staticClass: "breadcrumb-item" },
           [
             _c("router-link", { attrs: { to: { path: "/dashboard" } } }, [
-              _vm._v("Dashboard")
+              _vm._v("All Products")
             ])
           ],
           1
@@ -75862,7 +75939,9 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _c("h1", [_vm._v("Product Details")]),
+    _c("h2", [_vm._v("Product Details")]),
+    _vm._v(" "),
+    _c("hr"),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-sm-5" }, [

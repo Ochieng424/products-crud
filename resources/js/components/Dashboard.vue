@@ -9,6 +9,13 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    <form class="form-inline my-2 my-lg-0 ml-auto" @submit.prevent="searchit">
+                        <input v-model="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+                <hr>
+                <div class="row">
                     <div class="col-sm-4" v-for="product in allProducts.data" :key="product.id">
                         <div class="card mb-3" style="max-width: 540px;">
                             <div class="row no-gutters">
@@ -117,6 +124,7 @@
                 errors: {},
                 error: false,
                 allProducts: {},
+                search: '',
                 form: new Form({
                     id: '',
                     name: '',
@@ -128,6 +136,13 @@
             }
         },
         methods: {
+            searchit(){
+                let query = this.search;
+                axios.get('/product/find_products/' + query)
+                    .then((data) => {
+                        this.allProducts = data.data
+                    })
+            },
             deleteProduct(productId) {
                 swal.fire({
                     title: 'Are you sure?',

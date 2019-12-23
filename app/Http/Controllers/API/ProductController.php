@@ -20,7 +20,7 @@ class ProductController extends Controller
         $products = Product::latest()->get();
         $parent_array = array();
 
-        foreach ($products as $product){
+        foreach ($products as $product) {
 
             $child_array = array(
                 'id' => $product['id'],
@@ -41,7 +41,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -56,7 +56,7 @@ class ProductController extends Controller
         ]);
 
         $product = new Product();
-        $product->name = $request->name;
+        $product->name = ucwords(strtolower($request->name));
         $product->quantity = $request->quantity;
         $product->price = $request->price;
         $product->description = $request->description;
@@ -79,7 +79,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($productNo)
@@ -103,8 +103,8 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -139,7 +139,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -148,5 +148,70 @@ class ProductController extends Controller
         $product->delete();
 
         return response(['status' => 'success'], 200);
+    }
+
+//    public function find()
+//    {
+//        if ($search = \Request::get('q')) {
+//            $products = Product::where(function ($query) use ($search) {
+//                $query->where('name', 'LIKE', '%$search%')
+//                    ->orWhere('productNumber', 'LIKE', '%$search%')
+//                    ->orWhere('price', 'LIKE', '%$search%');
+//            })->get();
+//        }
+//
+//        $parent_array = array();
+//
+//        foreach ($products as $product) {
+//
+//            $child_array = array(
+//                'id' => $product['id'],
+//                'productNumber' => $product['productNumber'],
+//                'name' => $product['name'],
+//                'quantity' => $product['quantity'],
+//                'price' => $product['price'],
+//                'description' => $product['description'],
+//                'image' => Storage::url($product['imgPath'])
+//            );
+//
+//            array_push($parent_array, $child_array);
+//        }
+//
+//        return collect($parent_array);
+//    }
+
+    public function find($keyword)
+    {
+        $products = Product::latest()->get();
+        $parent_array = array();
+
+        foreach ($products as $product) {
+
+            $child_array = array(
+                'id' => $product['id'],
+                'productNumber' => $product['productNumber'],
+                'name' => $product['name'],
+                'quantity' => $product['quantity'],
+                'price' => $product['price'],
+                'description' => $product['description'],
+                'image' => Storage::url($product['imgPath'])
+            );
+
+            array_push($parent_array, $child_array);
+        }
+
+        $collection = collect($parent_array);
+
+        $filtered = $collection->filter(function ($value) use ($keyword) {
+            return (
+                strstr($value['name'], ucfirst($keyword)) ||
+                strstr($value['name'], ucwords($keyword)) ||
+                strstr($value['name'], ucwords(strtolower($keyword))) ||
+                strstr($value['price'], (int) $keyword) ||
+                strstr($value['name'], $keyword)
+            );
+        });
+
+        return $filtered->paginate(10);
     }
 }
