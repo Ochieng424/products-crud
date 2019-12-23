@@ -1,30 +1,33 @@
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid" style="margin: 0; padding: 0">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title float-left">Products</h3>
 
-                <button type="button" class="btn btn-primary btn-sm float-right" @click="productModal">Add Product
+                <button type="button" class="btn btn-primary btn-sm float-right" @click="productModal">
+                    <i class="fas fa-plus"></i>
+                    Add Product
                 </button>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <form class="form-inline my-2 my-lg-0 ml-auto" @submit.prevent="searchit">
+                    <form class="form-inline my-2 my-lg-0 ml-auto mr-3" @submit.prevent="searchit">
                         <input v-model="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-sm-4" v-for="product in allProducts.data" :key="product.id">
-                        <div class="card mb-3" style="max-width: 540px;">
+                        <div class="card mb-3">
                             <div class="row no-gutters">
-                                <div class="col-md-4" style="padding-left: 20px;">
-                                    <img :src="product.image" class="card-img img-fluid" alt="...">
+                                <div class="col-md-4" style="padding-left: 15px;">
+                                    <img :src="product.image" class="card-img" alt="..." style="height: 100%">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <h5 class="card-title">{{product.name}}</h5>
+                                        <p>Number: {{product.productNumber}}</p>
                                         <p>Price: {{product.price}}</p>
                                         <p>
                                             <router-link :to="{path: '/product_details/' + product.productNumber}">
