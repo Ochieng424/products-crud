@@ -3141,6 +3141,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Dashboard",
@@ -74897,11 +74921,57 @@ var render = function() {
               attrs: { type: "button" },
               on: { click: _vm.productModal }
             },
-            [_vm._v("Add Product\n            ")]
+            [_vm._v("Add Product\n                ")]
           )
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _c("div", { staticClass: "card-body" }, [
+          _c(
+            "div",
+            { staticClass: "row" },
+            _vm._l(_vm.allProducts.data, function(product) {
+              return _c("div", { key: product.id, staticClass: "col-sm-4" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "card mb-3",
+                    staticStyle: { "max-width": "540px" }
+                  },
+                  [
+                    _c("div", { staticClass: "row no-gutters" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "col-md-4",
+                          staticStyle: { "padding-left": "20px" }
+                        },
+                        [
+                          _c("img", {
+                            staticClass: "card-img img-fluid",
+                            attrs: { src: product.image, alt: "..." }
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-8" }, [
+                        _c("div", { staticClass: "card-body" }, [
+                          _c("h5", { staticClass: "card-title" }, [
+                            _vm._v(_vm._s(product.name))
+                          ]),
+                          _vm._v(" "),
+                          _c("p", [_vm._v("Price: " + _vm._s(product.price))]),
+                          _vm._v(" "),
+                          _vm._m(0, true)
+                        ])
+                      ])
+                    ])
+                  ]
+                )
+              ])
+            }),
+            0
+          )
+        ])
       ]),
       _vm._v(" "),
       _c(
@@ -75004,7 +75074,7 @@ var render = function() {
                         ? _c("small", { staticStyle: { color: "red" } }, [
                             _vm._v(
                               _vm._s(_vm.errors.quantity[0]) +
-                                "\n                            "
+                                "\n                                "
                             )
                           ])
                         : _vm._e()
@@ -75101,7 +75171,7 @@ var render = function() {
                         ? _c("small", { staticStyle: { color: "red" } }, [
                             _vm._v(
                               _vm._s(_vm.errors.description[0]) +
-                                "\n                            "
+                                "\n                                "
                             )
                           ])
                         : _vm._e()
@@ -75143,20 +75213,24 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-body" }, [
-      _c("h5", { staticClass: "card-title" }, [
-        _vm._v("Special title treatment")
-      ]),
+    return _c("p", [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary btn-sm", attrs: { type: "button" } },
+        [_vm._v("More")]
+      ),
       _vm._v(" "),
-      _c("p", { staticClass: "card-text" }, [
-        _vm._v(
-          "With supporting text below as a natural lead-in to additional content."
-        )
-      ]),
+      _c(
+        "button",
+        { staticClass: "btn btn-success btn-sm", attrs: { type: "button" } },
+        [_c("i", { staticClass: "fas fa-edit" })]
+      ),
       _vm._v(" "),
-      _c("a", { staticClass: "btn btn-primary", attrs: { href: "#" } }, [
-        _vm._v("Go somewhere")
-      ])
+      _c(
+        "button",
+        { staticClass: "btn btn-danger btn-sm", attrs: { type: "button" } },
+        [_c("i", { staticClass: "fas fa-trash" })]
+      )
     ])
   }
 ]

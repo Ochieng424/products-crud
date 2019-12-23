@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -30,7 +31,7 @@ class ProductController extends Controller
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
                 'description' => $product['description'],
-                'image' => response()->download($pathToFile)
+                'image' => Storage::url($product['imgPath'])
             );
 
             array_push($parent_array, $child_array);
@@ -65,7 +66,10 @@ class ProductController extends Controller
 
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $uploadedFile) {
-                $filename = $uploadedFile->storeAs('uploads', time() . $uploadedFile->getClientOriginalName());
+//                $filename = $uploadedFile->storeAs('uploads', time() . $uploadedFile->getClientOriginalName());
+                $filename = Storage::putFileAs(
+                    'public/uploads', $uploadedFile, time() . $uploadedFile->getClientOriginalName()
+                );
                 $product->imgPath = $filename;
             }
         }

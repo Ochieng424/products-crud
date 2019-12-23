@@ -8,9 +8,33 @@
                 </button>
             </div>
             <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+                <div class="row">
+                    <div class="col-sm-4" v-for="product in allProducts.data" :key="product.id">
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row no-gutters">
+                                <div class="col-md-4" style="padding-left: 20px;">
+                                    <img :src="product.image" class="card-img img-fluid" alt="...">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{product.name}}</h5>
+                                        <p>Price: {{product.price}}</p>
+<!--                                        <p><small class="text-muted">{{product.created_at|myDate}}</small></p>-->
+                                        <p>
+                                            <button type="button" class="btn btn-primary btn-sm">More</button>
+                                            <button type="button" class="btn btn-success btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <modal name="add-product" :resizable="true" :clickToClose="false" height="auto" :scrollable="true">
