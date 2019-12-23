@@ -87,6 +87,10 @@ Vue.use(require('@websanova/vue-auth'), {
     router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
 });
 
+// VModal
+import VModal from 'vue-js-modal';
+
+Vue.use(VModal);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
