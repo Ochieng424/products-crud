@@ -22,7 +22,7 @@
 <!--                                        <p><small class="text-muted">{{product.created_at|myDate}}</small></p>-->
                                         <p>
                                             <button type="button" class="btn btn-primary btn-sm">More</button>
-                                            <button type="button" class="btn btn-success btn-sm">
+                                            <button type="button" class="btn btn-success btn-sm" @click="editProduct(product)">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             <button type="button" class="btn btn-danger btn-sm">
@@ -41,7 +41,8 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12 mb-3 mt-3">
-                        <h4>Add Product</h4>
+                        <h4 v-if="!isEdit">Add Product</h4>
+                        <h4 v-if="isEdit">Edit Product</h4>
                         <hr>
                         <form method="post" @submit.prevent="createProduct">
                             <div class="form-group">
@@ -66,22 +67,28 @@
                                        class="form-control">
                                 <small style="color: red" v-if="error && errors.price">{{ errors.price[0] }}</small>
                             </div>
+                            <div class="form-group" v-if="isEdit">
+                                <label>Current Image</label><br>
+                                <img :src="form.image" class="card-img img-fluid" alt="..." style="width: 100px">
+                            </div>
                             <div class="form-group justify-content-center">
-                                <label for="files">Select Image</label>
+                                <label for="files" v-if="!isEdit">Select Image</label>
+                                <label for="files" v-if="isEdit">Select to Change</label>
                                 <input type="file" class="form-control-file" @change="fieldChange"
                                        id="files">
                                 <small style="color: red" v-if="error && errors.files">{{ errors.files[0] }}</small>
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea v-model="form.description" class="form-control" rows="3"></textarea>
+                                <textarea v-model="form.description" class="form-control" rows="5"></textarea>
                                 <small style="color: red" v-if="error && errors.description">{{ errors.description[0]
                                     }}
                                 </small>
                             </div>
                             <hr>
                             <button type="button" class="btn btn-danger btn-sm" @click="close">Close</button>
-                            <button type="submit" class="btn btn-success btn-sm">Add Product</button>
+                            <button type="submit" class="btn btn-success btn-sm" v-if="!isEdit">Add Product</button>
+                            <button type="button" class="btn btn-success btn-sm" v-if="isEdit" @click="updateProduct">Update Product</button>
                         </form>
                     </div>
                 </div>
@@ -100,20 +107,56 @@
         },
         data() {
             return {
+                isEdit: false,
                 attachments: [],
                 formProduct: new FormData(),
                 errors: {},
                 error: false,
                 allProducts: {},
                 form: new Form({
+                    id: '',
                     name: '',
                     description: '',
                     quantity: '',
-                    price: ''
+                    price: '',
+                    image: ''
                 })
             }
         },
         methods: {
+            updateProduct(){
+                for (let i = 0; i < this.attachments.length; i++) {
+                    this.formProduct.append('files[]', this.attachments[i]);
+                }
+                this.formProduct.append('name', this.form.name);
+                this.formProduct.append('description', this.form.description);
+                this.formProduct.append('quantity', this.form.quantity);
+                this.formProduct.append('price', this.form.price);
+
+                const config = {headers: {'Content-Type': 'multipart/form-data'}};
+
+                axios.post('/product/update_product/' + this.form.id, this.formProduct, config).then(response => {
+                    this.$modal.hide('add-product');
+                    Fire.$emit('entry');
+                    this.form.reset();
+                    swal.fire({
+                        type: 'success',
+                        title: 'Success!!',
+                        text: 'Product Updated Successfully',
+
+                    })
+
+                })
+                    .catch(error => {
+                        this.error = true;
+                        this.errors = error.response.data.errors;
+                    });
+            },
+            editProduct(product){
+                 this.isEdit = true;
+                this.$modal.show('add-product');
+                this.form.fill(product);
+            },
             getProducts() {
                 axios.get("/product/get_products").then(({data}) => ([this.allProducts = data]));
             },
@@ -151,10 +194,10 @@
                     this.$modal.hide('add-product');
                     Fire.$emit('entry');
                     this.form.reset();
-                    Swal.fire({
+                    swal.fire({
                         type: 'success',
-                        title: 'Submited!!',
-                        text: 'Successfully',
+                        title: 'Success!!',
+                        text: 'Product Created Successfully',
 
                     })
 
@@ -167,6 +210,9 @@
         },
         created() {
             this.getProducts();
+            Fire.$on('entry', () => {
+                this.getProducts();
+            })
         }
     }
 </script>

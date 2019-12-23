@@ -3165,6 +3165,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Dashboard",
@@ -3173,26 +3180,67 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      isEdit: false,
       attachments: [],
       formProduct: new FormData(),
       errors: {},
       error: false,
       allProducts: {},
       form: new Form({
+        id: '',
         name: '',
         description: '',
         quantity: '',
-        price: ''
+        price: '',
+        image: ''
       })
     };
   },
   methods: {
-    getProducts: function getProducts() {
+    updateProduct: function updateProduct() {
       var _this = this;
+
+      for (var i = 0; i < this.attachments.length; i++) {
+        this.formProduct.append('files[]', this.attachments[i]);
+      }
+
+      this.formProduct.append('name', this.form.name);
+      this.formProduct.append('description', this.form.description);
+      this.formProduct.append('quantity', this.form.quantity);
+      this.formProduct.append('price', this.form.price);
+      var config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      axios.post('/product/update_product/' + this.form.id, this.formProduct, config).then(function (response) {
+        _this.$modal.hide('add-product');
+
+        Fire.$emit('entry');
+
+        _this.form.reset();
+
+        swal.fire({
+          type: 'success',
+          title: 'Success!!',
+          text: 'Product Updated Successfully'
+        });
+      })["catch"](function (error) {
+        _this.error = true;
+        _this.errors = error.response.data.errors;
+      });
+    },
+    editProduct: function editProduct(product) {
+      this.isEdit = true;
+      this.$modal.show('add-product');
+      this.form.fill(product);
+    },
+    getProducts: function getProducts() {
+      var _this2 = this;
 
       axios.get("/product/get_products").then(function (_ref) {
         var data = _ref.data;
-        return [_this.allProducts = data];
+        return [_this2.allProducts = data];
       });
     },
     fieldChange: function fieldChange(e) {
@@ -3217,7 +3265,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$modal.show('add-product');
     },
     createProduct: function createProduct() {
-      var _this2 = this;
+      var _this3 = this;
 
       for (var i = 0; i < this.attachments.length; i++) {
         this.formProduct.append('files[]', this.attachments[i]);
@@ -3233,25 +3281,30 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post('/product/create_product', this.formProduct, config).then(function (response) {
-        _this2.$modal.hide('add-product');
+        _this3.$modal.hide('add-product');
 
         Fire.$emit('entry');
 
-        _this2.form.reset();
+        _this3.form.reset();
 
-        Swal.fire({
+        swal.fire({
           type: 'success',
-          title: 'Submited!!',
-          text: 'Successfully'
+          title: 'Success!!',
+          text: 'Product Created Successfully'
         });
       })["catch"](function (error) {
-        _this2.error = true;
-        _this2.errors = error.response.data.errors;
+        _this3.error = true;
+        _this3.errors = error.response.data.errors;
       });
     }
   },
   created: function created() {
+    var _this4 = this;
+
     this.getProducts();
+    Fire.$on('entry', function () {
+      _this4.getProducts();
+    });
   }
 });
 
@@ -74961,7 +75014,32 @@ var render = function() {
                           _vm._v(" "),
                           _c("p", [_vm._v("Price: " + _vm._s(product.price))]),
                           _vm._v(" "),
-                          _vm._m(0, true)
+                          _c("p", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary btn-sm",
+                                attrs: { type: "button" }
+                              },
+                              [_vm._v("More")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-success btn-sm",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.editProduct(product)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fas fa-edit" })]
+                            ),
+                            _vm._v(" "),
+                            _vm._m(0, true)
+                          ])
                         ])
                       ])
                     ])
@@ -74989,7 +75067,9 @@ var render = function() {
           _c("div", { staticClass: "container-fluid" }, [
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-sm-12 mb-3 mt-3" }, [
-                _c("h4", [_vm._v("Add Product")]),
+                !_vm.isEdit ? _c("h4", [_vm._v("Add Product")]) : _vm._e(),
+                _vm._v(" "),
+                _vm.isEdit ? _c("h4", [_vm._v("Edit Product")]) : _vm._e(),
                 _vm._v(" "),
                 _c("hr"),
                 _vm._v(" "),
@@ -75116,13 +75196,34 @@ var render = function() {
                         : _vm._e()
                     ]),
                     _vm._v(" "),
+                    _vm.isEdit
+                      ? _c("div", { staticClass: "form-group" }, [
+                          _c("label", [_vm._v("Current Image")]),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("img", {
+                            staticClass: "card-img img-fluid",
+                            staticStyle: { width: "100px" },
+                            attrs: { src: _vm.form.image, alt: "..." }
+                          })
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c(
                       "div",
                       { staticClass: "form-group justify-content-center" },
                       [
-                        _c("label", { attrs: { for: "files" } }, [
-                          _vm._v("Select Image")
-                        ]),
+                        !_vm.isEdit
+                          ? _c("label", { attrs: { for: "files" } }, [
+                              _vm._v("Select Image")
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.isEdit
+                          ? _c("label", { attrs: { for: "files" } }, [
+                              _vm._v("Select to Change")
+                            ])
+                          : _vm._e(),
                         _vm._v(" "),
                         _c("input", {
                           staticClass: "form-control-file",
@@ -75151,7 +75252,7 @@ var render = function() {
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { rows: "3" },
+                        attrs: { rows: "5" },
                         domProps: { value: _vm.form.description },
                         on: {
                           input: function($event) {
@@ -75189,14 +75290,28 @@ var render = function() {
                       [_vm._v("Close")]
                     ),
                     _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-success btn-sm",
-                        attrs: { type: "submit" }
-                      },
-                      [_vm._v("Add Product")]
-                    )
+                    !_vm.isEdit
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-success btn-sm",
+                            attrs: { type: "submit" }
+                          },
+                          [_vm._v("Add Product")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.isEdit
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-success btn-sm",
+                            attrs: { type: "button" },
+                            on: { click: _vm.updateProduct }
+                          },
+                          [_vm._v("Update Product")]
+                        )
+                      : _vm._e()
                   ]
                 )
               ])
@@ -75213,25 +75328,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("p", [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary btn-sm", attrs: { type: "button" } },
-        [_vm._v("More")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-success btn-sm", attrs: { type: "button" } },
-        [_c("i", { staticClass: "fas fa-edit" })]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-danger btn-sm", attrs: { type: "button" } },
-        [_c("i", { staticClass: "fas fa-trash" })]
-      )
-    ])
+    return _c(
+      "button",
+      { staticClass: "btn btn-danger btn-sm", attrs: { type: "button" } },
+      [_c("i", { staticClass: "fas fa-trash" })]
+    )
   }
 ]
 render._withStripped = true

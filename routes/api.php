@@ -24,6 +24,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::prefix('product')->group(function () {
         Route::post('create_product', 'API\ProductController@store');
         Route::get('get_products', 'API\ProductController@index');
+        Route::post('update_product/{productId}', 'API\ProductController@update');
     });
 });
 

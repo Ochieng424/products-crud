@@ -17,7 +17,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::latest()->get();
         $parent_array = array();
 
         foreach ($products as $product){
@@ -54,7 +54,7 @@ class ProductController extends Controller
             'price' => 'required',
             'description' => 'required|string',
             'files' => 'required',
-            'files.*' => 'image|mimes:jpg,png'
+//            'files.*' => 'image|mimes:jpg,png'
         ]);
 
         $product = new Product();
@@ -66,7 +66,6 @@ class ProductController extends Controller
 
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $uploadedFile) {
-//                $filename = $uploadedFile->storeAs('uploads', time() . $uploadedFile->getClientOriginalName());
                 $filename = Storage::putFileAs(
                     'public/uploads', $uploadedFile, time() . $uploadedFile->getClientOriginalName()
                 );
@@ -99,7 +98,31 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string',
+            'quantity' => 'required|numeric|min:1',
+            'price' => 'required',
+            'description' => 'required|string',
+        ]);
+
+        $product = Product::findOrFail($id);
+        $product->name = $request->name;
+        $product->quantity = $request->quantity;
+        $product->price = $request->price;
+        $product->description = $request->description;
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $uploadedFile) {
+                $filename = Storage::putFileAs(
+                    'public/uploads', $uploadedFile, time() . $uploadedFile->getClientOriginalName()
+                );
+                $product->imgPath = $filename;
+            }
+        }
+
+        $product->update();
+
+        return response(['status' => 'success'], 200);
     }
 
     /**
