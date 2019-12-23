@@ -9,13 +9,13 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <router-link :to="{path: '/'}" class="nav-link">Home</router-link>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="!$auth.check()">
                             <router-link :to="{path: '/login'}" class="nav-link">Login</router-link>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="!$auth.check()">
                             <router-link :to="{path: '/register'}" class="nav-link">Register</router-link>
                         </li>
                     </ul>
