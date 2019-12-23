@@ -3197,8 +3197,36 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    updateProduct: function updateProduct() {
+    deleteProduct: function deleteProduct(productId) {
       var _this = this;
+
+      swal.fire({
+        title: 'Are you sure?',
+        text: "Delete this Order??",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          axios["delete"]("/product/delete_product/" + productId).then(function () {
+            Fire.$emit('entry');
+            swal.fire('Deleted!', 'Successfully Deleted!!', 'success');
+            Fire.$emit('entry');
+          })["catch"](function (error) {
+            _this.errors = error.response.data.errors;
+            swal.fire({
+              type: 'error',
+              title: 'Error!!',
+              text: error.response.data.msg
+            });
+          });
+        }
+      });
+    },
+    updateProduct: function updateProduct() {
+      var _this2 = this;
 
       for (var i = 0; i < this.attachments.length; i++) {
         this.formProduct.append('files[]', this.attachments[i]);
@@ -3214,11 +3242,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post('/product/update_product/' + this.form.id, this.formProduct, config).then(function (response) {
-        _this.$modal.hide('add-product');
+        _this2.$modal.hide('add-product');
 
         Fire.$emit('entry');
 
-        _this.form.reset();
+        _this2.form.reset();
 
         swal.fire({
           type: 'success',
@@ -3226,8 +3254,8 @@ __webpack_require__.r(__webpack_exports__);
           text: 'Product Updated Successfully'
         });
       })["catch"](function (error) {
-        _this.error = true;
-        _this.errors = error.response.data.errors;
+        _this2.error = true;
+        _this2.errors = error.response.data.errors;
       });
     },
     editProduct: function editProduct(product) {
@@ -3236,11 +3264,11 @@ __webpack_require__.r(__webpack_exports__);
       this.form.fill(product);
     },
     getProducts: function getProducts() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get("/product/get_products").then(function (_ref) {
         var data = _ref.data;
-        return [_this2.allProducts = data];
+        return [_this3.allProducts = data];
       });
     },
     fieldChange: function fieldChange(e) {
@@ -3265,7 +3293,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$modal.show('add-product');
     },
     createProduct: function createProduct() {
-      var _this3 = this;
+      var _this4 = this;
 
       for (var i = 0; i < this.attachments.length; i++) {
         this.formProduct.append('files[]', this.attachments[i]);
@@ -3281,11 +3309,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post('/product/create_product', this.formProduct, config).then(function (response) {
-        _this3.$modal.hide('add-product');
+        _this4.$modal.hide('add-product');
 
         Fire.$emit('entry');
 
-        _this3.form.reset();
+        _this4.form.reset();
 
         swal.fire({
           type: 'success',
@@ -3293,17 +3321,17 @@ __webpack_require__.r(__webpack_exports__);
           text: 'Product Created Successfully'
         });
       })["catch"](function (error) {
-        _this3.error = true;
-        _this3.errors = error.response.data.errors;
+        _this4.error = true;
+        _this4.errors = error.response.data.errors;
       });
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
     this.getProducts();
     Fire.$on('entry', function () {
-      _this4.getProducts();
+      _this5.getProducts();
     });
   }
 });
@@ -75038,7 +75066,23 @@ var render = function() {
                               [_c("i", { staticClass: "fas fa-edit" })]
                             ),
                             _vm._v(" "),
-                            _vm._m(0, true)
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger btn-sm",
+                                attrs: { type: "button" }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "fas fa-trash",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteProduct(product.id)
+                                    }
+                                  }
+                                })
+                              ]
+                            )
                           ])
                         ])
                       ])
@@ -75323,18 +75367,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "btn btn-danger btn-sm", attrs: { type: "button" } },
-      [_c("i", { staticClass: "fas fa-trash" })]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

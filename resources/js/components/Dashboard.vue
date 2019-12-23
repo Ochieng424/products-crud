@@ -26,7 +26,7 @@
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             <button type="button" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="fas fa-trash" @click="deleteProduct(product.id)"></i>
                                             </button>
                                         </p>
                                     </div>
@@ -124,6 +124,36 @@
             }
         },
         methods: {
+            deleteProduct(productId){
+                    swal.fire({
+                        title: 'Are you sure?',
+                        text: "Delete this Order??",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.value) {
+                            axios.delete("/product/delete_product/" + productId).then(() => {
+                                Fire.$emit('entry');
+                                swal.fire(
+                                    'Deleted!',
+                                    'Successfully Deleted!!',
+                                    'success'
+                                )
+                                Fire.$emit('entry');
+                            }).catch(error => {
+                                this.errors = error.response.data.errors;
+                                swal.fire({
+                                    type: 'error',
+                                    title: 'Error!!',
+                                    text: error.response.data.msg,
+                                })
+                            });
+                        }
+                    })
+            },
             updateProduct(){
                 for (let i = 0; i < this.attachments.length; i++) {
                     this.formProduct.append('files[]', this.attachments[i]);

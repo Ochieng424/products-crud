@@ -25,6 +25,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
         Route::post('create_product', 'API\ProductController@store');
         Route::get('get_products', 'API\ProductController@index');
         Route::post('update_product/{productId}', 'API\ProductController@update');
+        Route::delete('delete_product/{productId}', 'API\ProductController@destroy');
     });
 });
 
