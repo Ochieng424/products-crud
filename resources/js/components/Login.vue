@@ -3,20 +3,20 @@
         <div class="row">
             <div class="col-sm-6 ml-auto mr-auto mt-4" style="background-color: #f4f4f4; padding: 20px">
                 <h4>Login</h4>
-                <form>
+                <form method="post" @submit.prevent="login">
                     <div class="form-group">
                         <label>Email</label>
-                        <input v-model="form.email" type="email" name="email"
+                        <input v-model="email" type="email" name="email"
                                placeholder="Email"
-                               class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
-                        <has-error :form="form" field="email"></has-error>
+                               class="form-control">
+                        <small style="color: red" v-if="error && errors.email">{{ errors.email }}</small>
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input v-model="form.password" type="password" name="password"
+                        <input v-model="password" type="password" name="password"
                                placeholder="Password"
-                               class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
-                        <has-error :form="form" field="password"></has-error>
+                               class="form-control">
+                        <small style="color: red" v-if="error && errors.password">{{ errors.password }}</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
@@ -28,12 +28,32 @@
 <script>
     export default {
         name: "Login",
-        data(){
-            return{
-                form: new Form({
-                    email: '',
-                    password: ''
-                })
+        data() {
+            return {
+                errors: {},
+                error: false,
+                success: false,
+                email: '',
+                password: ''
+            }
+        },
+        methods: {
+            login() {
+                this.$auth.login({
+                    params: {
+                        email: this.email,
+                        password: this.password,
+                    },
+                    success: function () {
+                    },
+                    error: function (resp) {
+                        this.error = true;
+                        this.errors = resp.response.data.errors;
+                    },
+                    rememberMe: true,
+                    redirect: '/dashboard',
+                    fetchUser: true,
+                });
             }
         }
     }
