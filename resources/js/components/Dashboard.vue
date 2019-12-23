@@ -32,7 +32,8 @@
                                 <input v-model="form.quantity" type="number" name="quantity"
                                        placeholder="Enter Quantity"
                                        class="form-control">
-                                <small style="color: red" v-if="error && errors.quantity">{{ errors.quantity[0] }}</small>
+                                <small style="color: red" v-if="error && errors.quantity">{{ errors.quantity[0] }}
+                                </small>
                             </div>
                             <div class="form-group">
                                 <label>Price</label>
@@ -50,7 +51,9 @@
                             <div class="form-group">
                                 <label>Description</label>
                                 <textarea v-model="form.description" class="form-control" rows="3"></textarea>
-                                <small style="color: red" v-if="error && errors.description">{{ errors.description[0] }}</small>
+                                <small style="color: red" v-if="error && errors.description">{{ errors.description[0]
+                                    }}
+                                </small>
                             </div>
                             <hr>
                             <button type="button" class="btn btn-danger btn-sm" @click="close">Close</button>
@@ -77,6 +80,7 @@
                 formProduct: new FormData(),
                 errors: {},
                 error: false,
+                allProducts: {},
                 form: new Form({
                     name: '',
                     description: '',
@@ -86,6 +90,9 @@
             }
         },
         methods: {
+            getProducts() {
+                axios.get("/product/get_products").then(({data}) => ([this.allProducts = data]));
+            },
             fieldChange(e) {
                 let selectedFiles = e.target.files;
                 if (!selectedFiles.length) {
@@ -135,7 +142,7 @@
             }
         },
         created() {
-
+            this.getProducts();
         }
     }
 </script>

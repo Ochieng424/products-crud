@@ -3138,6 +3138,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Dashboard",
@@ -3150,6 +3153,7 @@ __webpack_require__.r(__webpack_exports__);
       formProduct: new FormData(),
       errors: {},
       error: false,
+      allProducts: {},
       form: new Form({
         name: '',
         description: '',
@@ -3159,6 +3163,14 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    getProducts: function getProducts() {
+      var _this = this;
+
+      axios.get("/product/get_products").then(function (_ref) {
+        var data = _ref.data;
+        return [_this.allProducts = data];
+      });
+    },
     fieldChange: function fieldChange(e) {
       var selectedFiles = e.target.files;
 
@@ -3181,7 +3193,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$modal.show('add-product');
     },
     createProduct: function createProduct() {
-      var _this = this;
+      var _this2 = this;
 
       for (var i = 0; i < this.attachments.length; i++) {
         this.formProduct.append('files[]', this.attachments[i]);
@@ -3197,11 +3209,11 @@ __webpack_require__.r(__webpack_exports__);
         }
       };
       axios.post('/product/create_product', this.formProduct, config).then(function (response) {
-        _this.$modal.hide('add-product');
+        _this2.$modal.hide('add-product');
 
         Fire.$emit('entry');
 
-        _this.form.reset();
+        _this2.form.reset();
 
         Swal.fire({
           type: 'success',
@@ -3209,12 +3221,14 @@ __webpack_require__.r(__webpack_exports__);
           text: 'Successfully'
         });
       })["catch"](function (error) {
-        _this.error = true;
-        _this.errors = error.response.data.errors;
+        _this2.error = true;
+        _this2.errors = error.response.data.errors;
       });
     }
   },
-  created: function created() {}
+  created: function created() {
+    this.getProducts();
+  }
 });
 
 /***/ }),
@@ -74988,7 +75002,10 @@ var render = function() {
                       _vm._v(" "),
                       _vm.error && _vm.errors.quantity
                         ? _c("small", { staticStyle: { color: "red" } }, [
-                            _vm._v(_vm._s(_vm.errors.quantity[0]))
+                            _vm._v(
+                              _vm._s(_vm.errors.quantity[0]) +
+                                "\n                            "
+                            )
                           ])
                         : _vm._e()
                     ]),
@@ -75082,7 +75099,10 @@ var render = function() {
                       _vm._v(" "),
                       _vm.error && _vm.errors.description
                         ? _c("small", { staticStyle: { color: "red" } }, [
-                            _vm._v(_vm._s(_vm.errors.description[0]))
+                            _vm._v(
+                              _vm._s(_vm.errors.description[0]) +
+                                "\n                            "
+                            )
                           ])
                         : _vm._e()
                     ]),

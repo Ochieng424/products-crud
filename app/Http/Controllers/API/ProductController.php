@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ProductController extends Controller
 {
@@ -15,7 +16,27 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::all();
+        $parent_array = array();
+
+        foreach ($products as $product){
+
+            $pathToFile = storage_path('app/' . $product['imgPath']);
+
+            $child_array = array(
+                'id' => $product['id'],
+                'productNumber' => $product['productNumber'],
+                'name' => $product['name'],
+                'quantity' => $product['quantity'],
+                'price' => $product['price'],
+                'description' => $product['description'],
+                'image' => response()->download($pathToFile)
+            );
+
+            array_push($parent_array, $child_array);
+        }
+
+        return collect($parent_array)->paginate(10);
     }
 
     /**
