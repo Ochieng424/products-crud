@@ -19,14 +19,17 @@
                                     <div class="card-body">
                                         <h5 class="card-title">{{product.name}}</h5>
                                         <p>Price: {{product.price}}</p>
-<!--                                        <p><small class="text-muted">{{product.created_at|myDate}}</small></p>-->
                                         <p>
-                                            <button type="button" class="btn btn-primary btn-sm">More</button>
-                                            <button type="button" class="btn btn-success btn-sm" @click="editProduct(product)">
+                                            <router-link :to="{path: '/product_details/' + product.productNumber}">
+                                                <button type="button" class="btn btn-primary btn-sm">More</button>
+                                            </router-link>
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                    @click="editProduct(product)">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button type="button" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash" @click="deleteProduct(product.id)"></i>
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                    @click="deleteProduct(product.id)">
+                                                <i class="fas fa-trash"></i>
                                             </button>
                                         </p>
                                     </div>
@@ -80,15 +83,16 @@
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea v-model="form.description" class="form-control" rows="5"></textarea>
-                                <small style="color: red" v-if="error && errors.description">{{ errors.description[0]
-                                    }}
+                                <textarea v-model="form.description" class="form-control" rows="4"></textarea>
+                                <small style="color: red" v-if="error && errors.description">{{ errors.description[0] }}
                                 </small>
                             </div>
                             <hr>
                             <button type="button" class="btn btn-danger btn-sm" @click="close">Close</button>
                             <button type="submit" class="btn btn-success btn-sm" v-if="!isEdit">Add Product</button>
-                            <button type="button" class="btn btn-success btn-sm" v-if="isEdit" @click="updateProduct">Update Product</button>
+                            <button type="button" class="btn btn-success btn-sm" v-if="isEdit" @click="updateProduct">
+                                Update Product
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -124,37 +128,37 @@
             }
         },
         methods: {
-            deleteProduct(productId){
-                    swal.fire({
-                        title: 'Are you sure?',
-                        text: "Delete this Order??",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.value) {
-                            axios.delete("/product/delete_product/" + productId).then(() => {
-                                Fire.$emit('entry');
-                                swal.fire(
-                                    'Deleted!',
-                                    'Successfully Deleted!!',
-                                    'success'
-                                )
-                                Fire.$emit('entry');
-                            }).catch(error => {
-                                this.errors = error.response.data.errors;
-                                swal.fire({
-                                    type: 'error',
-                                    title: 'Error!!',
-                                    text: error.response.data.msg,
-                                })
-                            });
-                        }
-                    })
+            deleteProduct(productId) {
+                swal.fire({
+                    title: 'Are you sure?',
+                    text: "Delete this Product??",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.delete("/product/delete_product/" + productId).then(() => {
+                            Fire.$emit('entry');
+                            swal.fire(
+                                'Deleted!',
+                                'Successfully Deleted!!',
+                                'success'
+                            )
+                            Fire.$emit('entry');
+                        }).catch(error => {
+                            this.errors = error.response.data.errors;
+                            swal.fire({
+                                type: 'error',
+                                title: 'Error!!',
+                                text: error.response.data.msg,
+                            })
+                        });
+                    }
+                })
             },
-            updateProduct(){
+            updateProduct() {
                 for (let i = 0; i < this.attachments.length; i++) {
                     this.formProduct.append('files[]', this.attachments[i]);
                 }
@@ -182,8 +186,8 @@
                         this.errors = error.response.data.errors;
                     });
             },
-            editProduct(product){
-                 this.isEdit = true;
+            editProduct(product) {
+                this.isEdit = true;
                 this.$modal.show('add-product');
                 this.form.fill(product);
             },

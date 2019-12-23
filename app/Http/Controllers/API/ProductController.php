@@ -22,8 +22,6 @@ class ProductController extends Controller
 
         foreach ($products as $product){
 
-            $pathToFile = storage_path('app/' . $product['imgPath']);
-
             $child_array = array(
                 'id' => $product['id'],
                 'productNumber' => $product['productNumber'],
@@ -84,9 +82,22 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($productNo)
     {
-        //
+        $product = Product::where('productNumber', $productNo)->first();
+
+        $details_array = array(
+            'id' => $product['id'],
+            'productNumber' => $product['productNumber'],
+            'name' => $product['name'],
+            'quantity' => $product['quantity'],
+            'price' => $product['price'],
+            'description' => $product['description'],
+            'created_at' => $product['created_at'],
+            'image' => Storage::url($product['imgPath'])
+        );
+
+        return collect($details_array)->toJson();
     }
 
     /**

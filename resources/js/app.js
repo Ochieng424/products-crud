@@ -72,6 +72,12 @@ let routes = [
             auth: true
         }
     },
+
+    {
+        path: '/product_details/:productNo', component: require('./components/ProductDetails.vue').default, meta: {
+            auth: true
+        }
+    },
 ];
 const router = new VueRouter({
     // mode: 'history',
