@@ -5,11 +5,10 @@ namespace Tests\Feature;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use JWTAuth;
 
-class CreateProductTest extends TestCase
+class GetProductsTest extends TestCase
 {
     use RefreshDatabase;
     /**
@@ -17,8 +16,7 @@ class CreateProductTest extends TestCase
      *
      * @test
      */
-
-    public function create_product()
+    public function testExample()
     {
         $user = User::create([
             'name' => 'test',
@@ -29,15 +27,8 @@ class CreateProductTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $token,
-        ])->json('POST','api/product/create_product',[
-            'name' => 'Jollof Rice',
-            'description' => 'Parboil rice, get pepper and mixture, and some spice and serve!',
-            'quantity' => 4,
-            'price' => 450,
-            'files' => [
-                Storage::url('public/uploads/1577171134abstract-2468874_640.jpg')
-            ]
-        ]);
+        ])->json('GET','api/product/get_products');
+
         $response->assertStatus(200);
     }
 }
