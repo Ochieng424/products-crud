@@ -36,15 +36,29 @@
                     <button type="submit" class="btn btn-primary" style="width: 100%">Register</button>
                 </form>
             </div>
+            <div class="vld-parent">
+                <loading name="loader" :active.sync="isLoading"
+                         :can-cancel="false"
+                         :is-full-page="fullPage"></loading>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    // Import component
+    import Loading from 'vue-loading-overlay';
+    // Import stylesheet
+    import 'vue-loading-overlay/dist/vue-loading.css';
     export default {
         name: "Register",
+        components:{
+            Loading
+        },
         data() {
             return {
+                isLoading: false,
+                fullPage: true,
                 errors: {},
                 error: false,
                 success: false,
@@ -55,6 +69,7 @@
         },
         methods: {
             register() {
+                // this.isLoading = true;
                 this.$auth.register({
                     data: {
                         name: this.name,
@@ -62,6 +77,7 @@
                         password: this.password
                     },
                     success: function () {
+                        this.isLoading = false;
                         this.success = true;
                         this.name = "";
                         this.email = "";
@@ -70,6 +86,7 @@
                     error: function (resp) {
                         this.error = true;
                         this.errors = resp.response.data.errors;
+                        this.isLoading = false;
                     },
                     redirect: null
                 });

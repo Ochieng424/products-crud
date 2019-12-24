@@ -3,33 +3,50 @@
         <div class="row">
             <div class="col-sm-6 ml-auto mr-auto mt-4" style="background-color: #f4f4f4; padding: 20px">
                 <h4>Login</h4>
+                <div class="alert alert-danger" v-if="error">
+                    <p>Wrong Username or Password</p>
+                </div>
                 <form method="post" @submit.prevent="login">
                     <div class="form-group">
                         <label>Email</label>
                         <input v-model="email" type="email" name="email"
                                placeholder="Email"
                                class="form-control">
-                        <small style="color: red" v-if="error && errors.email">{{ errors.email }}</small>
+                        <small style="color: red" v-if="error && errors.email">{{ errors.email[0] }}</small>
                     </div>
                     <div class="form-group">
                         <label>Password</label>
                         <input v-model="password" type="password" name="password"
                                placeholder="Password"
                                class="form-control">
-                        <small style="color: red" v-if="error && errors.password">{{ errors.password }}</small>
+                        <small style="color: red" v-if="error && errors.password">{{ errors.password[0] }}</small>
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
+            </div>
+            <div class="vld-parent">
+                <loading name="loader" :active.sync="isLoading"
+                         :can-cancel="false"
+                         :is-full-page="fullPage"></loading>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    // Import component
+    import Loading from 'vue-loading-overlay';
+    // Import stylesheet
+    import 'vue-loading-overlay/dist/vue-loading.css';
     export default {
         name: "Login",
+        components:{
+            Loading
+        },
         data() {
             return {
+                isLoading: false,
+                fullPage: true,
                 errors: {},
                 error: false,
                 success: false,
@@ -39,16 +56,20 @@
         },
         methods: {
             login() {
+                // this.isLoading = true;
                 this.$auth.login({
                     params: {
                         email: this.email,
                         password: this.password,
                     },
                     success: function () {
+                        this.isLoading = false;
                     },
                     error: function (resp) {
+                        this.isLoading = false;
                         this.error = true;
                         this.errors = resp.response.data.errors;
+
                     },
                     rememberMe: true,
                     redirect: '/dashboard',

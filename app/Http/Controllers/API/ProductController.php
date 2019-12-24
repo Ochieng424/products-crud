@@ -51,8 +51,7 @@ class ProductController extends Controller
             'quantity' => 'required|numeric|min:1',
             'price' => 'required',
             'description' => 'required|string',
-            'files' => 'required',
-//            'files.*' => 'image|mimes:jpg,png'
+            'files' => 'required'
         ]);
 
         $product = new Product();

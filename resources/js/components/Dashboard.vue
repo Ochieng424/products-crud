@@ -108,19 +108,31 @@
                 </div>
             </div>
         </modal>
+        <div class="vld-parent">
+            <loading name="loader" :active.sync="isLoading"
+                     :can-cancel="false"
+                     :is-full-page="fullPage"></loading>
+        </div>
     </div>
 </template>
 
 <script>
     import {VueEditor} from "vue2-editor";
+    // Import component
+    import Loading from 'vue-loading-overlay';
+    // Import stylesheet
+    import 'vue-loading-overlay/dist/vue-loading.css';
 
     export default {
         name: "Dashboard",
         components: {
-            VueEditor
+            VueEditor,
+            Loading
         },
         data() {
             return {
+                isLoading: false,
+                fullPage: true,
                 isEdit: false,
                 attachments: [],
                 formProduct: new FormData(),
@@ -140,10 +152,12 @@
         },
         methods: {
             searchit(){
+                this.isLoading = true;
                 let query = this.search;
                 axios.get('/product/find_products/' + query)
                     .then((data) => {
-                        this.allProducts = data.data
+                        this.allProducts = data.data;
+                        this.isLoading = false;
                     })
             },
             deleteProduct(productId) {
@@ -177,6 +191,7 @@
                 })
             },
             updateProduct() {
+                this.isLoading = true;
                 for (let i = 0; i < this.attachments.length; i++) {
                     this.formProduct.append('files[]', this.attachments[i]);
                 }
@@ -188,6 +203,7 @@
                 const config = {headers: {'Content-Type': 'multipart/form-data'}};
 
                 axios.post('/product/update_product/' + this.form.id, this.formProduct, config).then(response => {
+                    this.isLoading = false;
                     this.$modal.hide('add-product');
                     Fire.$emit('entry');
                     this.form.reset();
@@ -200,6 +216,7 @@
 
                 })
                     .catch(error => {
+                        this.isLoading = false;
                         this.error = true;
                         this.errors = error.response.data.errors;
                     });
@@ -225,6 +242,7 @@
                 this.$modal.hide('add-product');
             },
             productModal() {
+                this.isEdit = false;
                 this.form.reset();
                 $("#files").val('');
                 this.errors = {};
@@ -232,6 +250,7 @@
                 this.$modal.show('add-product');
             },
             createProduct() {
+                this.isLoading = true;
                 for (let i = 0; i < this.attachments.length; i++) {
                     this.formProduct.append('files[]', this.attachments[i]);
                 }
@@ -243,6 +262,7 @@
                 const config = {headers: {'Content-Type': 'multipart/form-data'}};
 
                 axios.post('/product/create_product', this.formProduct, config).then(response => {
+                    this.isLoading = false;
                     this.$modal.hide('add-product');
                     Fire.$emit('entry');
                     this.form.reset();
@@ -255,6 +275,7 @@
 
                 })
                     .catch(error => {
+                        this.isLoading = false;
                         this.error = true;
                         this.errors = error.response.data.errors;
                     });
