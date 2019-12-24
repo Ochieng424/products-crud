@@ -14,7 +14,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 
 Vue.use(VueAxios, axios);
-axios.defaults.baseURL = 'http://localhost:8000/api';
+axios.defaults.baseURL = 'http://products.deka.co.ke/api';
 
 // VueRouter
 import VueRouter from 'vue-router';
