@@ -40,7 +40,7 @@ class CreateProductTest extends TestCase
             'Authorization' => 'Bearer '. $token,
         ])->json('POST','api/product/create_product',[
             'name' => 'Jollof Rice',
-            'description' => 'Parboil rice, get pepper and mix, and some spice and serve!',
+            'description' => 'Parboil rice, get pepper and mixture, and some spice and serve!',
             'quantity' => 4,
             'price' => 450,
             'files' => [
