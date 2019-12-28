@@ -129,7 +129,7 @@ class ProductController extends Controller
 //                    'public/uploads', $uploadedFile, time() . $uploadedFile->getClientOriginalName()
 //                );
                 $filename = time() . $uploadedFile->getClientOriginalName();
-                $uploadedFile->save(public_path('img' . $filename));
+                $uploadedFile->move(public_path('img'), $filename);
                 $product->imgPath = $filename;
             }
         }
