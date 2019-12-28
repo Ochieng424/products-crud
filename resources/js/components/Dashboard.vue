@@ -21,11 +21,13 @@
                     <div class="col-sm-4" v-for="product in allProducts.data" :key="product.id">
                         <div class="card mb-3">
                             <div class="row no-gutters">
-                                <div class="col-md-4" style="padding-left: 15px;">
-                                    <img :src="product.image" class="card-img" alt="..." style="height: 100%">
+                                <div class="col-md-5">
+                                    <div class="row justify-content-center">
+                                        <img :src="getPhoto(product.image)" class="card-img mt-4" style="width: 100px">
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
+                                <div class="col-md-7">
+                                    <div class="card-body" style="padding: 20px">
                                         <h5 class="card-title">{{product.name}}</h5>
                                         <p>Number: {{product.productNumber}}</p>
                                         <p>Price: {{product.price}}</p>
@@ -82,7 +84,7 @@
                             </div>
                             <div class="form-group" v-if="isEdit">
                                 <label>Current Image</label><br>
-                                <img :src="form.image" class="card-img img-fluid" alt="..." style="width: 100px">
+                                <img :src="getPhoto(form.image)" class="card-img img-fluid" style="width: 100px">
                             </div>
                             <div class="form-group justify-content-center">
                                 <label for="files" v-if="!isEdit">Select Image</label>
@@ -151,6 +153,10 @@
             }
         },
         methods: {
+            getPhoto(img) {
+                let photo = "img/" + img;
+                return photo;
+            },
             searchit(){
                 this.isLoading = true;
                 let query = this.search;

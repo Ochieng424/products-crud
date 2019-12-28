@@ -10,7 +10,9 @@
         <hr>
         <div class="row">
             <div class="col-sm-5">
-                <img :src="details.image" class="card-img img-fluid mx-auto" alt="...">
+                <div class="row">
+                    <img :src="getPhoto(details.image)" class="card-img img-fluid mx-auto" style="width: 400px;">
+                </div>
             </div>
             <div class="col-sm-7">
                 <h3>{{details.name}}</h3>
@@ -36,6 +38,10 @@
             }
         },
         methods:{
+            getPhoto(img) {
+                let photo = "img/" + img;
+                return photo;
+            },
             getDetails(){
                 axios.get("/product/get_details/" + this.productNo).then(({data}) => ([this.details = data]));
             }

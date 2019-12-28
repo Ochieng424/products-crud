@@ -29,7 +29,7 @@ class ProductController extends Controller
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
                 'description' => $product['description'],
-                'image' => Storage::url($product['imgPath'])
+                'image' => $product['imgPath']
             );
 
             array_push($parent_array, $child_array);
@@ -63,9 +63,11 @@ class ProductController extends Controller
 
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $uploadedFile) {
-                $filename = Storage::putFileAs(
-                    'public/uploads', $uploadedFile, time() . $uploadedFile->getClientOriginalName()
-                );
+//                $filename = Storage::putFileAs(
+//                    'public/uploads', $uploadedFile, time() . $uploadedFile->getClientOriginalName()
+//                );
+                $filename = time() . $uploadedFile->getClientOriginalName();
+                $uploadedFile->move(public_path('img'), $filename);
                 $product->imgPath = $filename;
             }
         }
@@ -93,7 +95,7 @@ class ProductController extends Controller
             'price' => $product['price'],
             'description' => $product['description'],
             'created_at' => $product['created_at'],
-            'image' => Storage::url($product['imgPath'])
+            'image' => $product['imgPath']
         );
 
         return collect($details_array)->toJson();
@@ -123,9 +125,11 @@ class ProductController extends Controller
 
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $uploadedFile) {
-                $filename = Storage::putFileAs(
-                    'public/uploads', $uploadedFile, time() . $uploadedFile->getClientOriginalName()
-                );
+//                $filename = Storage::putFileAs(
+//                    'public/uploads', $uploadedFile, time() . $uploadedFile->getClientOriginalName()
+//                );
+                $filename = time() . $uploadedFile->getClientOriginalName();
+                $uploadedFile->save(public_path('img' . $filename));
                 $product->imgPath = $filename;
             }
         }
@@ -193,7 +197,7 @@ class ProductController extends Controller
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
                 'description' => $product['description'],
-                'image' => Storage::url($product['imgPath'])
+                'image' => $product['imgPath']
             );
 
             array_push($parent_array, $child_array);
