@@ -21,12 +21,10 @@ Route::group(['middleware' => 'jwt.auth'], function(){
     Route::get('auth/user', 'API\AuthController@user');
     Route::post('auth/logout', 'API\AuthController@logout');
 
-    Route::prefix('product')->group(function () {
-        Route::post('create_product', 'API\ProductController@store');
-        Route::get('get_products', 'API\ProductController@index');
+    Route::apiResources(['products' => 'API\ProductController']);
+
+    Route::prefix('products')->group(function () {
         Route::post('update_product/{productId}', 'API\ProductController@update');
-        Route::delete('delete_product/{productId}', 'API\ProductController@destroy');
-        Route::get('get_details/{productNo}', 'API\ProductController@show');
         Route::get('find_products/{keyword}', 'API\ProductController@find');
     });
 });

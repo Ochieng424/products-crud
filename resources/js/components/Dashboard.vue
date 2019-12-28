@@ -160,7 +160,7 @@
             searchit(){
                 this.isLoading = true;
                 let query = this.search;
-                axios.get('/product/find_products/' + query)
+                axios.get('/products/find_products/' + query)
                     .then((data) => {
                         this.allProducts = data.data;
                         this.isLoading = false;
@@ -177,7 +177,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.value) {
-                        axios.delete("/product/delete_product/" + productId).then(() => {
+                        axios.delete("/products/" + productId).then(() => {
                             Fire.$emit('entry');
                             swal.fire(
                                 'Deleted!',
@@ -208,7 +208,7 @@
 
                 const config = {headers: {'Content-Type': 'multipart/form-data'}};
 
-                axios.post('/product/update_product/' + this.form.id, this.formProduct, config).then(response => {
+                axios.post('/products/update_product/' + this.form.id, this.formProduct, config).then(response => {
                     this.isLoading = false;
                     this.$modal.hide('add-product');
                     Fire.$emit('entry');
@@ -229,11 +229,13 @@
             },
             editProduct(product) {
                 this.isEdit = true;
+                this.errors = {};
+                this.error = false;
                 this.$modal.show('add-product');
                 this.form.fill(product);
             },
             getProducts() {
-                axios.get("/product/get_products").then(({data}) => ([this.allProducts = data]));
+                axios.get("/products").then(({data}) => ([this.allProducts = data]));
             },
             fieldChange(e) {
                 let selectedFiles = e.target.files;
@@ -267,7 +269,7 @@
 
                 const config = {headers: {'Content-Type': 'multipart/form-data'}};
 
-                axios.post('/product/create_product', this.formProduct, config).then(response => {
+                axios.post('/products', this.formProduct, config).then(response => {
                     this.isLoading = false;
                     this.$modal.hide('add-product');
                     Fire.$emit('entry');

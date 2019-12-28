@@ -43,7 +43,7 @@
                 return photo;
             },
             getDetails(){
-                axios.get("/product/get_details/" + this.productNo).then(({data}) => ([this.details = data]));
+                axios.get("/products/" + this.productNo).then(({data}) => ([this.details = data]));
             }
         },
         created() {

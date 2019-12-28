@@ -3241,7 +3241,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.isLoading = true;
       var query = this.search;
-      axios.get('/product/find_products/' + query).then(function (data) {
+      axios.get('/products/find_products/' + query).then(function (data) {
         _this.allProducts = data.data;
         _this.isLoading = false;
       });
@@ -3259,7 +3259,7 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Yes, delete it!'
       }).then(function (result) {
         if (result.value) {
-          axios["delete"]("/product/delete_product/" + productId).then(function () {
+          axios["delete"]("/products/" + productId).then(function () {
             Fire.$emit('entry');
             swal.fire('Deleted!', 'Successfully Deleted!!', 'success');
             Fire.$emit('entry');
@@ -3292,7 +3292,7 @@ __webpack_require__.r(__webpack_exports__);
           'Content-Type': 'multipart/form-data'
         }
       };
-      axios.post('/product/update_product/' + this.form.id, this.formProduct, config).then(function (response) {
+      axios.post('/products/update_product/' + this.form.id, this.formProduct, config).then(function (response) {
         _this3.isLoading = false;
 
         _this3.$modal.hide('add-product');
@@ -3314,13 +3314,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     editProduct: function editProduct(product) {
       this.isEdit = true;
+      this.errors = {};
+      this.error = false;
       this.$modal.show('add-product');
       this.form.fill(product);
     },
     getProducts: function getProducts() {
       var _this4 = this;
 
-      axios.get("/product/get_products").then(function (_ref) {
+      axios.get("/products").then(function (_ref) {
         var data = _ref.data;
         return [_this4.allProducts = data];
       });
@@ -3365,7 +3367,7 @@ __webpack_require__.r(__webpack_exports__);
           'Content-Type': 'multipart/form-data'
         }
       };
-      axios.post('/product/create_product', this.formProduct, config).then(function (response) {
+      axios.post('/products', this.formProduct, config).then(function (response) {
         _this5.isLoading = false;
 
         _this5.$modal.hide('add-product');
@@ -3679,7 +3681,7 @@ __webpack_require__.r(__webpack_exports__);
     getDetails: function getDetails() {
       var _this = this;
 
-      axios.get("/product/get_details/" + this.productNo).then(function (_ref) {
+      axios.get("/products/" + this.productNo).then(function (_ref) {
         var data = _ref.data;
         return [_this.details = data];
       });
